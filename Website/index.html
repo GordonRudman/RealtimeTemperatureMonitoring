@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>IoT Realtime Temperature monitoring - Gordon Rudman</title>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+      <meta name="description" content="Gordon Rudman" />
+      <meta name="keywords" content="Gordon Rudman, IoT, PubNub, EON, C3 Charts" />
+
+      <script type="text/javascript" src="http://pubnub.github.io/eon/v/eon/0.0.9/eon.js"></script>
+      <link type="text/css" rel="stylesheet" href="http://pubnub.github.io/eon/v/eon/0.0.9/eon.css" />
+	</head>
+	<body>
+    <div>
+      <h3>Temperature</h3>
+      <div id="temperatureChart"></div>
+    </div> 
+
+<script> 
+    //TODO: move this into its own file
+    var pubnub = PUBNUB.init({
+      subscribe_key : 'demo'
+//      subscribe_key : 'sub-c-1b31cb08-e644-11e5-b07b-02ee2ddab7fe'
+    });
+    var channel = "3ssldkfjglkdsjfkgl23028374yihas23";
+
+
+    var temperatureChart = eon.chart({
+                                        pubnub: pubnub,
+                                        channel: channel,
+                                        history: true,
+                                        limit: 50,
+                                        flow: false,
+                                        generate: {
+                                                      bindto: '#temperatureChart',
+                                                      data: {
+                                                              type: 'spline',
+                                                              labels: false,  
+                                                              hide: ['Humidity'],
+                                                              names: {
+                                                                        T1: 'Beer',
+                                                                        T2: 'Fridge',
+                                                                        T3: 'Ambient'
+                                                                     }
+                                                            },
+                                                     // subchart: { show: true },
+                                                     // subchart: { show: true },
+                                                     // zoom: { enabled: true },
+                                                      legend: { position: 'bottom', 
+                                                                hide: ['Humidity'],
+                                                              },
+                                                      point: { show: false },
+                                                      axis: {
+                                                              x : {
+                                                                    label: 'Time',
+                                                                    type : 'timeseries',
+                                                                    tick: { format: '%H:%M:%S', culling: { max: 3 } } 
+                                                                  },
+                                                              y: {
+                                                                  label: {text: 'Temperature', position: 'outer-middle'},
+                                                                // min: 15,
+                                                                // max: 30,
+                                                                // tick:  {format: function (d) { return d + '°C'; }}
+                                                                  tick:  {format: function (d) { 
+                                                                                                    return d3.format(".1f")(d) + "°C"; 
+                                                                                                }}
+                                                                  } 
+                                                            }
+                                        }
+    }); 
+    </script> 
+	</body>
+</html>
